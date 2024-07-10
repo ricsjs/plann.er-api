@@ -16,6 +16,7 @@ import (
 	"github.com/phenpessoa/gutils/netutils/httputils"
 	"github.com/ricsjs/plann.er-api/internal/api"
 	"github.com/ricsjs/plann.er-api/internal/api/spec"
+	"github.com/ricsjs/plann.er-api/internal/mailer/mailpit"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -30,7 +31,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
-	fmt.Println("goodbye")
+	fmt.Println("goodbye :)")
 }
 
 func run(ctx context.Context) error {
@@ -67,6 +68,7 @@ func run(ctx context.Context) error {
 	si := api.NewApi(
 		pool,
 		logger,
+		mailpit.NewMailPit(pool),
 	)
 
 	r.Mount("/", spec.Handler(&si))

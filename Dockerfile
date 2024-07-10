@@ -1,17 +1,16 @@
-# Usa a imagem base oficial do Golang 1.21
-FROM golang:latest
+FROM golang:1.22.4-alpine
 
-# Define o diretório de trabalho dentro do container
-WORKDIR /app
+WORKDIR /planner
 
-# Copia o código-fonte e go.mod para o container
+COPY go.mod go.sum ./
+
+RUN go mod download && go mod verify
+
 COPY . .
 
-# Faz o build da aplicação
-RUN go build -o planner ./cmd/main
+WORKDIR /planner/cmd/main
 
-# Expõe a porta que a aplicação irá escutar
-EXPOSE 8000
+RUN go build -o /planner/bin/main .
 
-# Comando para executar a aplicação
-CMD [ "./planner" ]
+EXPOSE 8080
+ENTRYPOINT [ "/planner/bin/main" ]
